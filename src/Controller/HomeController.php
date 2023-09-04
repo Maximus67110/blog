@@ -15,4 +15,10 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/hello', name: 'app_hello')]
+    public function hello(): Response
+    {
+        return $this->render('hello.html.twig');
+    }
 }
