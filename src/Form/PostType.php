@@ -29,6 +29,7 @@ class PostType extends AbstractType
                 'class' => Tag::class,
                 'choice_label' => 'name',
                 'multiple' => true,
+                'expanded' => true,
                 'required' => true,
             ])
             ->add('submit', SubmitType::class)
