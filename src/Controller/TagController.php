@@ -53,4 +53,12 @@ class TagController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/delete/{id}', name: 'app_tag_delete')]
+    public function delete(Tag $tag, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($tag);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_tag_list');
+    }
 }
