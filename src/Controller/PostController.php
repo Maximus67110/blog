@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,8 +27,6 @@ class PostController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $post = new Post();
-        $post->setCreatedAt(new DateTimeImmutable());
-        $post->setUpdatedAt(new DateTimeImmutable());
         $post->setUser($this->getUser());
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
@@ -46,7 +43,6 @@ class PostController extends AbstractController
     #[Route('/edit/{id}', name: 'app_post_edit')]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
-        $post->setUpdatedAt(new DateTimeImmutable());
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

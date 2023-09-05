@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Post
 {
     #[ORM\Id]
@@ -141,6 +142,12 @@ class Post
         return $this;
     }
 
+    #[ORM\PrePersist]
+    public function updatedCreatedAt(): void
+    {
+        $this->setCreatedAt(new \DateTimeImmutable());
+    }
+
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
@@ -151,6 +158,13 @@ class Post
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updatedUpdatedAt(): void
+    {
+        $this->setUpdatedAt(new \DateTimeImmutable());
     }
 
     public function getTitle(): ?string
