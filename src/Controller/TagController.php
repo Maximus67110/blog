@@ -54,6 +54,14 @@ class TagController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}', name: 'app_tag_detail')]
+    public function detail(Tag $tag): Response
+    {
+        return $this->render('tag/detail.html.twig', [
+            'tag' => $tag,
+        ]);
+    }
+
     #[Route('/delete/{id}', name: 'app_tag_delete')]
     public function delete(Tag $tag, EntityManagerInterface $entityManager): Response
     {
