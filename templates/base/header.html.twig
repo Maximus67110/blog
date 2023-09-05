@@ -18,9 +18,21 @@
                         <li><a class="dropdown-item" href="{{ path('app_tag_list') }}">List</a></li>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Post
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('app_post_create') }}">Create</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_post_list') }}">List</a></li>
+                    </ul>
+                </li>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item">
+                        <a class="nav-link">{{ app.user.email }}</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
                     </li>

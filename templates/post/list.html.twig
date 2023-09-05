@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Post List{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="text-center mt-4">
+            <h1>Post List</h1>
+        </div>
+        <div class="d-flex justify-content-start">
+            <a class="btn btn-outline-success" href="{{ path('app_post_create') }}">Create</a>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Tag</th>
+                <th scope="col">User</th>
+                <th scope="col">Content</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for post in posts %}
+                <tr>
+                    <th scope="row">{{ post.id }}</th>
+                    <td>{{ post.title }}</td>
+                    <td>
+                        {% for tag in post.tags %}
+                            {{ tag.name }}
+                        {% endfor %}
+                    </td>
+                    <td>{{ post.user.name }}</td>
+                    <td>{{ post.content }}</td>
+                    <td>
+                        <a class="btn btn-outline-info" href="{{ path('app_post_detail', { id: post.id }) }}">Detail</a>
+                        <a class="btn btn-outline-secondary" href="{{ path('app_post_edit', { id: post.id }) }}">Edit</a>
+                        <a class="btn btn-outline-danger" href="{{ path('app_post_delete', { id: post.id }) }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block body %}
+    <div class="container mt-2">
+        <a class="btn btn-outline-secondary" href="{{ path('app_post_list') }}">Back</a>
+        <div class="text-center mt-4">
+            <h1>Edit Post</h1>
+        </div>
+        {{ form(form) }}
+    </div>
+{% endblock %}
