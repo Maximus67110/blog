@@ -11,13 +11,15 @@
         {% for post in posts %}
             <div class="col-md-6 col-lg-3 mb-3">
                 <div class="card" style="width: 18rem;">
-                    {% if post.image is not null %}
-                        <img src="{{ post.image ? asset('uploads/' ~ post.image)}}" class="card-img-top" alt="{{ post.title }}">
-                    {% else %}
-                        <img src="https://picsum.photos/600/400?random={{ loop.index }}" class="card-img-top" alt="{{ post.title }}">
-                    {% endif %}
+                    <a href="{{ path('app_post', {'id': post.id}) }}">
+                        {% if post.image is not null %}
+                            <img src="{{ post.image ? asset('uploads/' ~ post.image)}}" class="card-img-top" alt="{{ post.title }}">
+                        {% else %}
+                            <img src="https://picsum.photos/600/400?random={{ loop.index }}" class="card-img-top" alt="{{ post.title }}">
+                        {% endif %}
+                    </a>
                     <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
+                        <h5 class="card-title">{{ post.title }} by {{ post.user.name }}</h5>
                         <p class="card-text">{{ post.content }}</p>
                     </div>
                 </div>
