@@ -42,7 +42,7 @@ class AuthController extends AbstractController
                 $newFilename = $safeFilename.'-'.uniqid('', true).'.'.$avatarFile->guessExtension();
                 try {
                     $avatarFile->move(
-                        $this->getParameter('brochures_directory'),
+                        $this->getParameter('uploads_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {

@@ -42,7 +42,7 @@ class PostController extends AbstractController
                 $newFilename = $safeFilename.'-'.uniqid('', true).'.'.$imageFile->guessExtension();
                 try {
                     $imageFile->move(
-                        $this->getParameter('brochures_directory'),
+                        $this->getParameter('uploads_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -72,7 +72,7 @@ class PostController extends AbstractController
                 $newFilename = $safeFilename.'-'.uniqid('', true).'.'.$imageFile->guessExtension();
                 try {
                     $imageFile->move(
-                        $this->getParameter('brochures_directory'),
+                        $this->getParameter('uploads_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
