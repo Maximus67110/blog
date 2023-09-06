@@ -6,16 +6,18 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AuthController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         if (is_a($this->getUser(), User::class)) {
             return $this->redirectToRoute('app_home');
@@ -33,6 +35,21 @@ class AuthController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $avatarFile = $form->get('avatar')->getData();
+            if ($avatarFile) {
+                $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid('', true).'.'.$avatarFile->guessExtension();
+                try {
+                    $avatarFile->move(
+                        $this->getParameter('brochures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    dump($e);
+                }
+                $user->setAvatar($newFilename);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
