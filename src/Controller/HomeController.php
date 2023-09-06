@@ -19,7 +19,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_post')]
+    #[Route('/{slug}', name: 'app_post')]
     public function detail(Post $post): Response
     {
         return $this->render('home/post.html.twig', [

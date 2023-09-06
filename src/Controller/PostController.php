@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[IsGranted("ROLE_ADMIN")]
 #[Route('/post')]
@@ -28,10 +29,9 @@ class PostController extends AbstractController
     }
 
     #[Route('/create', name: 'app_post_create')]
-    public function create(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader, SluggerInterface $slugger): Response
     {
         $post = new Post();
-        $post->setUser($this->getUser());
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -41,6 +41,12 @@ class PostController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $post->setImage($imageFileName);
             }
+            /** @var string $postTitle */
+            $postTitle = $form->get('title')->getData();
+            if ($postTitle) {
+                $post->setSlug((string) $slugger->slug($postTitle));
+            }
+            $post->setUser($this->getUser());
             $entityManager->persist($post);
             $entityManager->flush();
             return $this->redirectToRoute('app_post_list');
@@ -51,7 +57,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_post_edit')]
-    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
+    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, FileUploader $fileUploader, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
@@ -61,6 +67,11 @@ class PostController extends AbstractController
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
                 $post->setImage($imageFileName);
+            }
+            /** @var string $postTitle */
+            $postTitle = $form->get('title')->getData();
+            if ($postTitle) {
+                $post->setSlug((string) $slugger->slug($postTitle));
             }
             $entityManager->persist($post);
             $entityManager->flush();

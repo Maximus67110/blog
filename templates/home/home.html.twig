@@ -11,7 +11,7 @@
         {% for post in posts %}
             <div class="col-md-6 col-lg-3 mb-3">
                 <div class="card" style="width: 18rem;">
-                    <a href="{{ path('app_post', {'id': post.id}) }}">
+                    <a href="{{ path('app_post', {'slug': post.slug}) }}">
                         {% if post.image is not null %}
                             <img src="{{ post.image ? asset('uploads/' ~ post.image)}}" class="card-img-top" alt="{{ post.title }}">
                         {% else %}
@@ -19,8 +19,11 @@
                         {% endif %}
                     </a>
                     <div class="card-body">
-                        <h5 class="card-title">{{ post.title }} by {{ post.user.name }}</h5>
-                        <p class="card-text">{{ post.content }}</p>
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <div class="card-text">
+                            <p>{{ post.createdAt|format_datetime('full', 'short', locale='fr') }} by {{ post.user.name }}</p>
+                            <div>{{ post.content }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
