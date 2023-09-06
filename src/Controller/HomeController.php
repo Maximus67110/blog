@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\Tag;
+use App\Entity\User;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +22,23 @@ class HomeController extends AbstractController
     {
         $posts = $postRepository->findAll();
         return $this->render('home/home.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
+
+    #[Route('/tag/{id}', name: 'app_tag')]
+    public function postByTag(Tag $tag): Response
+    {
+        return $this->render('home/tag.html.twig', [
+            'posts' => $tag->getPosts(),
+        ]);
+    }
+
+    #[Route('/user/{id}', name: 'app_user')]
+    public function postByUser(User $user, PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findBy(['user'=> $user], ['createdAt' => Criteria::DESC]);
+        return $this->render('home/user.html.twig', [
             'posts' => $posts,
         ]);
     }

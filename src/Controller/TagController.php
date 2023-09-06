@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted("ROLE_ADMIN")]
-#[Route('/tag')]
+#[Route('/admin/tag')]
 class TagController extends AbstractController
 {
     #[Route('/list', name: 'app_tag_list')]

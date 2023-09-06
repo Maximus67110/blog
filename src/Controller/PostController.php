@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[IsGranted("ROLE_ADMIN")]
-#[Route('/post')]
+#[Route('/admin/post')]
 class PostController extends AbstractController
 {
     #[Route('/list', name: 'app_post_list')]
