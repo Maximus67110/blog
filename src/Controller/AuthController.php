@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class AuthController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
     {
         if (is_a($this->getUser(), User::class)) {
             return $this->redirectToRoute('app_home');
@@ -35,22 +36,12 @@ class AuthController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            /** @var UploadedFile $avatarFile */
             $avatarFile = $form->get('avatar')->getData();
             if ($avatarFile) {
-                $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid('', true).'.'.$avatarFile->guessExtension();
-                try {
-                    $avatarFile->move(
-                        $this->getParameter('uploads_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    dump($e);
-                }
-                $user->setAvatar($newFilename);
+                $avatarFileName = $fileUploader->upload($avatarFile);
+                $user->setAvatar($avatarFileName);
             }
-
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
