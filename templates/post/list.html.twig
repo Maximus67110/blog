@@ -35,8 +35,10 @@
                     <td>{{ post.content }}</td>
                     <td>
                         <a class="btn btn-outline-info" href="{{ path('app_post_detail', { id: post.id }) }}">Detail</a>
-                        <a class="btn btn-outline-secondary" href="{{ path('app_post_edit', { id: post.id }) }}">Edit</a>
-                        <a class="btn btn-outline-danger" href="{{ path('app_post_delete', { id: post.id }) }}">Delete</a>
+                        {% if app.user.id == post.user.id %}
+                            <a class="btn btn-outline-secondary" href="{{ path('app_post_edit', { id: post.id }) }}">Edit</a>
+                            <a class="btn btn-outline-danger" href="{{ path('app_post_delete', { id: post.id }) }}">Delete</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

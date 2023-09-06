@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/tag')]
 class TagController extends AbstractController
 {
-    #[Route('', name: 'app_tag_list')]
+    #[Route('/list', name: 'app_tag_list')]
     public function list(TagRepository $tagRepository): Response
     {
         $tags = $tagRepository->findAll();
