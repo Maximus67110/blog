@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Form\CommentType;
 use App\Repository\PostRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,16 +24,33 @@ class HomeController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_post')]
-    public function detail(Post $post): Response
+    public function detail(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setUser($this->getUser());
+            $comment->setPost($post);
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_post', ['slug' => $post->getSlug()]);
+        }
         return $this->render('home/post.html.twig', [
             'post' => $post,
+            'form' => $form,
         ]);
     }
 
-    #[Route('/hello', name: 'app_hello')]
-    public function hello(): Response
+    #[Route('/comment/delete/{id}', name: 'app_comment_delete')]
+    public function deleteComment(Comment $comment, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('home/hello.html.twig');
+        $post = $comment->getPost();
+        if ($this->getUser()?->getId() !== $comment->getUser()?->getId()) {
+            return $this->redirectToRoute('app_post', ['slug' => $post?->getSlug()]);
+        }
+        $entityManager->remove($comment);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_post', ['slug' => $post?->getSlug()]);
     }
 }

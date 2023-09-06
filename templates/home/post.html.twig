@@ -13,5 +13,28 @@
             <img src="https://picsum.photos/600/400?random={{ loop.index }}" class="card-img-top" alt="{{ post.title }}">
         {% endif %}
         <p>{{ post.content|raw }}</p>
+        <div class="m3-5">
+            <h4 class="text-center mb-3">Add a comment</h4>
+            {% if is_granted('ROLE_USER') %}
+                {{ form(form) }}
+            {% else %}
+                <div class='text-center alert alert-info'>
+                    <b>You must <a href="{{path ('app_login')}}">login</a> to post a comment</b>
+                </div>
+            {% endif %}
+        </div>
+        {% for comment in post.comments %}
+            <div class="d-flex justify-content-between my-3">
+                <div>
+                    <strong>Published {{ comment.createdAt|format_datetime('short', 'short', locale='fr') }} by {{ comment.user.name }}</strong>
+                    <div>{{ comment.content }}</div>
+                </div>
+                {% if app.user and app.user.id == comment.user.id %}
+                    <div>
+                        <a href="{{ path('app_comment_delete', {'id': comment.id}) }}" class="btn btn-outline-danger">Delete</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}
