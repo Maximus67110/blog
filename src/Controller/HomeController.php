@@ -7,6 +7,7 @@ use App\Entity\Post;
 use App\Entity\Tag;
 use App\Entity\User;
 use App\Form\CommentType;
+use App\Form\SearchType;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,10 +18,25 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
-    public function index(PostRepository $postRepository): Response
+    public function header(): Response
     {
-        $posts = $postRepository->findAll();
+        $form = $this->createForm(SearchType::class, null, [
+            'action' => $this->generateUrl('app_home'),
+            'method' => 'GET',
+        ]);
+        return $this->render('base/header.html.twig',[
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/', name: 'app_home')]
+    public function index(Request $request, PostRepository $postRepository): Response
+    {
+        if (($search = $request->query->all('search')) && $title = $search['title']) {
+            $posts = $postRepository->search($title);
+        } else {
+            $posts = $postRepository->findAll();
+        }
         return $this->render('home/home.html.twig', [
             'posts' => $posts,
         ]);
