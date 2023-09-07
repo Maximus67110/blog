@@ -20,8 +20,8 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(Request $request, PostRepository $postRepository): Response
     {
-        if (($title = $request->query->get('title'))) {
-            $posts = $postRepository->search($title);
+        if (($value = $request->query->get('value'))) {
+            $posts = $postRepository->search($value);
         } else {
             $posts = $postRepository->findAll();
         }
