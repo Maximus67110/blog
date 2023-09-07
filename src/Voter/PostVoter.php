@@ -4,6 +4,7 @@ namespace App\Voter;
 
 use App\Entity\Post;
 use App\Entity\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -11,6 +12,10 @@ class PostVoter extends Voter
 {
     public const EDIT = 'edit';
     public const DELETE = 'delete';
+
+    public function __construct(
+        private Security $security,
+    ) {}
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -45,11 +50,11 @@ class PostVoter extends Voter
 
     private function canEdit(Post $post, User $user): bool
     {
-        return $user === $post->getUser();
+        return $user === $post->getUser() || $this->security->isGranted('ROLE_SUPER_ADMIN');
     }
 
     private function canDelete(Post $post, User $user): bool
     {
-        return $user === $post->getUser();
+        return $user === $post->getUser() || $this->security->isGranted('ROLE_SUPER_ADMIN');
     }
 }

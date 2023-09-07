@@ -35,7 +35,7 @@
                     <td>{{ post.content }}</td>
                     <td>
                         <a class="btn btn-outline-info" href="{{ path('app_post_detail', { id: post.id }) }}">Detail</a>
-                        {% if app.user.id == post.user.id %}
+                        {% if app.user.id == post.user.id or is_granted('ROLE_SUPER_ADMIN') %}
                             <a class="btn btn-outline-secondary" href="{{ path('app_post_edit', { id: post.id }) }}">Edit</a>
                             <a class="btn btn-outline-danger" href="{{ path('app_post_delete', { id: post.id }) }}">Delete</a>
                         {% endif %}
