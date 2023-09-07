@@ -57,11 +57,9 @@ class PostController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_post_edit')]
+    #[IsGranted('edit', 'post')]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, FileUploader $fileUploader, SluggerInterface $slugger): Response
     {
-        if ($this->getUser()?->getId() !== $post->getUser()?->getId()) {
-            $this->redirectToRoute('app_post_list');
-        }
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -86,7 +84,8 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_detail')]
-    public function detail(Post $post): Response
+    #[IsGranted('show', 'post')]
+    public function show(Post $post): Response
     {
         return $this->render('post/detail.html.twig', [
             'post' => $post,
@@ -94,11 +93,9 @@ class PostController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_post_delete')]
+    #[IsGranted('delete', 'post')]
     public function delete(Post $post, EntityManagerInterface $entityManager): Response
     {
-        if ($this->getUser()?->getId() !== $post->getUser()?->getId()) {
-            $this->redirectToRoute('app_post_list');
-        }
         $entityManager->remove($post);
         $entityManager->flush();
         return $this->redirectToRoute('app_post_list');
