@@ -7,10 +7,12 @@
         <a class="btn btn-outline-secondary" href="{{ path('app_home') }}">Back</a>
         <h1>{{ post.title }}</h1>
         <p>{{ post.createdAt|format_datetime('full', 'short', locale='fr') }} by {{ post.user.name }}</p>
-        {% if post.image is not null %}
-            <img src="{{ post.image ? asset('uploads/' ~ post.image)}}" class="card-img-top" alt="{{ post.title }}">
+        {% if post.image is not null and post.image starts with 'http' %}
+            <img src="{{ post.image }}" class="card-img-top" alt="{{ post.title }}">
+        {% elseif post.image is not null %}
+            <img src="{{ asset('uploads/' ~ post.image) }}" class="card-img-top" alt="{{ post.title }}">
         {% else %}
-            <img src="https://picsum.photos/600/400" class="card-img-top" alt="{{ post.title }}">
+            <img src="https://picsum.photos/600/400?random={{ loop.index }}" class="card-img-top" alt="{{ post.title }}">
         {% endif %}
         <p>{{ post.content|raw }}</p>
         <div class="m3-5">
