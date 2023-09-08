@@ -47,7 +47,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_post', requirements: ['slug' => '\s+'])]
+    #[Route('/{slug}', name: 'app_post')]
     public function detail(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
         $comment = new Comment();
