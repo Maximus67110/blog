@@ -30,6 +30,15 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/api/post/{offset}', name: 'app_api_post')]
+    public function post(int $offset, PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findBy([], ['createdAt' => Criteria::DESC], 4, $offset);
+        return $this->render('home/partial-post.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
+
     #[Route('/tag/{id}', name: 'app_tag', requirements: ['id' => '\d+'])]
     public function postByTag(Tag $tag): Response
     {
