@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\Tag;
 use App\Entity\User;
@@ -74,6 +75,14 @@ class AppFixtures extends Fixture
             $posts[$i]->setSlug($faker->slug());
             $posts[$i]->addTag($tags[random_int(0, (count($tags) - 1))]);
             $posts[$i]->setUser($users[random_int(0, (count($users) - 1))]);
+            // Add Comments
+            for ($c = 0; $c < random_int(0, 5); $c++) {
+                $comment = new Comment();
+                $comment->setContent($faker->text());
+                $comment->setUser($users[random_int(0, (count($users) - 1))]);
+                $manager->persist($comment);
+                $posts[$i]->addComment($comment);
+            }
             $manager->persist($posts[$i]);
         }
         $output->writeln(sprintf("%s post successfully created", count($posts)));
