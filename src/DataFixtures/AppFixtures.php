@@ -21,6 +21,26 @@ class AppFixtures extends Fixture
         $output = new ConsoleOutput();
         $faker = Factory::create();
         $faker->addProvider(new PicsumPhotosProvider($faker));
+
+        // Create Super Admin
+        $superAdmin = new User();
+        $superAdmin->setName('Super Admin');
+        $superAdmin->setEmail('super-admin@mail.com');
+        $superAdmin->setRoles(['ROLE_SUPER_ADMIN']);
+        $superAdmin->setAvatar($faker->imageUrl(600,400, true));
+        $superAdmin->setPassword($this->hasher->hashPassword($superAdmin, 'password'));
+        $manager->persist($superAdmin);
+
+        // Create Admin
+        $admin = new User();
+        $admin->setName('Admin');
+        $admin->setEmail('admin@mail.com');
+        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setAvatar($faker->imageUrl(600,400, true));
+        $admin->setPassword($this->hasher->hashPassword($admin, 'password'));
+        $manager->persist($admin);
+
+        // Create User
         $users = [];
         for ($i = 0; $i < 10; $i++) {
             $users[$i] = new User();
@@ -33,6 +53,7 @@ class AppFixtures extends Fixture
         }
         $output->writeln(sprintf("%s user successfully created", count($users)));
 
+        // Create Tag
         $tags = [];
         for ($i = 0; $i < 10; $i++) {
             $tags[$i] = new Tag();
@@ -41,6 +62,7 @@ class AppFixtures extends Fixture
         }
         $output->writeln(sprintf("%s tag successfully created", count($tags)));
 
+        // Create Post
         $posts = [];
         for ($i = 0; $i < 100; $i++) {
             $posts[$i] = new Post();
