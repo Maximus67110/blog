@@ -23,7 +23,7 @@ class HomeController extends AbstractController
         if (($value = $request->query->get('value'))) {
             $posts = $postRepository->search($value);
         } else {
-            $posts = $postRepository->findAll();
+            $posts = $postRepository->findBy([], ['createdAt' => 'DESC'], 4);
         }
         return $this->render('home/home.html.twig', [
             'posts' => $posts,
