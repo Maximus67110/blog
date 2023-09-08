@@ -46,44 +46,47 @@ class AppFixtures extends Fixture
         // Create User
         $users = [];
         for ($i = 0; $i < 10; $i++) {
-            $users[$i] = new User();
-            $users[$i]->setName($faker->userName());
-            $users[$i]->setEmail($faker->email());
-            $users[$i]->setRoles(['ROLE_USER']);
-            $users[$i]->setAvatar($faker->imageUrl(600,400, true));
-            $users[$i]->setPassword($this->hasher->hashPassword($users[$i], $faker->password()));
-            $manager->persist($users[$i]);
+            $user = new User();
+            $user->setName($faker->userName());
+            $user->setEmail($faker->email());
+            $user->setRoles(['ROLE_USER']);
+            $user->setAvatar($faker->imageUrl(600,400, true));
+            $user->setPassword($this->hasher->hashPassword($user, $faker->password()));
+            $manager->persist($user);
+            $users[] = $user;
         }
         $output->writeln(sprintf("%s user successfully created", count($users)));
 
         // Create Tag
         $tags = [];
         for ($i = 0; $i < 10; $i++) {
-            $tags[$i] = new Tag();
-            $tags[$i]->setName($faker->word());
-            $manager->persist($tags[$i]);
+            $tag = new Tag();
+            $tag->setName($faker->word());
+            $manager->persist($tag);
+            $tags[] = $tag;
         }
         $output->writeln(sprintf("%s tag successfully created", count($tags)));
 
         // Create Post
         $posts = [];
         for ($i = 0; $i < 100; $i++) {
-            $posts[$i] = new Post();
-            $posts[$i]->setTitle($faker->text());
-            $posts[$i]->setImage($faker->imageUrl(600,400, true));
-            $posts[$i]->setContent($faker->text());
-            $posts[$i]->setSlug($faker->slug());
-            $posts[$i]->addTag($tags[random_int(0, (count($tags) - 1))]);
-            $posts[$i]->setUser($users[random_int(0, (count($users) - 1))]);
+            $post = new Post();
+            $post->setTitle($faker->text());
+            $post->setImage($faker->imageUrl(600,400, true));
+            $post->setContent($faker->text());
+            $post->setSlug($faker->slug());
+            $post->addTag($tags[random_int(0, (count($tags) - 1))]);
+            $post->setUser($users[random_int(0, (count($users) - 1))]);
             // Add Comments
             for ($c = 0; $c < random_int(0, 5); $c++) {
                 $comment = new Comment();
                 $comment->setContent($faker->text());
                 $comment->setUser($users[random_int(0, (count($users) - 1))]);
                 $manager->persist($comment);
-                $posts[$i]->addComment($comment);
+                $post->addComment($comment);
             }
-            $manager->persist($posts[$i]);
+            $manager->persist($post);
+            $posts[] = $post;
         }
         $output->writeln(sprintf("%s post successfully created", count($posts)));
 
