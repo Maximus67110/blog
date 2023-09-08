@@ -41,7 +41,7 @@ class TagController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'app_tag_edit')]
+    #[Route('/edit/{id}', name: 'app_tag_edit', requirements: ['id' => '\d+'])]
     public function edit(Request $request, Tag $tag, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(TagType::class, $tag);
@@ -56,7 +56,7 @@ class TagController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_tag_detail')]
+    #[Route('/{id}', name: 'app_tag_detail', requirements: ['id' => '\d+'])]
     public function detail(Tag $tag): Response
     {
         return $this->render('tag/detail.html.twig', [
@@ -64,7 +64,7 @@ class TagController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'app_tag_delete')]
+    #[Route('/delete/{id}', name: 'app_tag_delete', requirements: ['id' => '\d+'])]
     public function delete(Tag $tag, EntityManagerInterface $entityManager): Response
     {
         $entityManager->remove($tag);

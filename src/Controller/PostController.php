@@ -56,7 +56,7 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'app_post_edit')]
+    #[Route('/edit/{id}', name: 'app_post_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('edit', 'post')]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, FileUploader $fileUploader, SluggerInterface $slugger): Response
     {
@@ -83,7 +83,7 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_post_detail')]
+    #[Route('/{id}', name: 'app_post_detail', requirements: ['id' => '\d+'])]
     #[IsGranted('show', 'post')]
     public function show(Post $post): Response
     {
@@ -92,7 +92,7 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'app_post_delete')]
+    #[Route('/delete/{id}', name: 'app_post_delete', requirements: ['id' => '\d+'])]
     #[IsGranted('delete', 'post')]
     public function delete(Post $post, EntityManagerInterface $entityManager): Response
     {

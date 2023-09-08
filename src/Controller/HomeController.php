@@ -30,7 +30,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/tag/{id}', name: 'app_tag')]
+    #[Route('/tag/{id}', name: 'app_tag', requirements: ['id' => '\d+'])]
     public function postByTag(Tag $tag): Response
     {
         return $this->render('home/tag.html.twig', [
@@ -38,7 +38,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/user/{id}', name: 'app_user')]
+    #[Route('/user/{id}', name: 'app_user', requirements: ['id' => '\d+'])]
     public function postByUser(User $user, PostRepository $postRepository): Response
     {
         $posts = $postRepository->findBy(['user'=> $user], ['createdAt' => Criteria::DESC]);
@@ -47,7 +47,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_post')]
+    #[Route('/{slug}', name: 'app_post', requirements: ['slug' => '\s+'])]
     public function detail(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
         $comment = new Comment();
@@ -66,7 +66,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/comment/delete/{id}', name: 'app_comment_delete')]
+    #[Route('/comment/delete/{id}', name: 'app_comment_delete', requirements: ['id' => '\d+'])]
     public function deleteComment(Comment $comment, EntityManagerInterface $entityManager): Response
     {
         $post = $comment->getPost();
