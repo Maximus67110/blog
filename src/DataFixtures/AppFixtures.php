@@ -30,6 +30,7 @@ class AppFixtures extends Fixture
         $superAdmin->setAvatar($faker->imageUrl(600,400, true));
         $superAdmin->setPassword($this->hasher->hashPassword($superAdmin, 'password'));
         $manager->persist($superAdmin);
+        $output->writeln('Super Admin successfully created');
 
         // Create Admin
         $admin = new User();
@@ -39,6 +40,7 @@ class AppFixtures extends Fixture
         $admin->setAvatar($faker->imageUrl(600,400, true));
         $admin->setPassword($this->hasher->hashPassword($admin, 'password'));
         $manager->persist($admin);
+        $output->writeln('Admin successfully created');
 
         // Create User
         $users = [];
