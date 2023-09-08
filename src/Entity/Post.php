@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -15,33 +16,43 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['post_list'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
+    #[Groups(['post_list'])]
     private Collection $tags;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
+    #[Groups(['post_list'])]
     private Collection $comments;
 
     #[ORM\ManyToOne(inversedBy: 'Post')]
+    #[Groups(['post_list'])]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['post_list'])]
     private ?string $content = null;
 
     #[ORM\Column]
+    #[Groups(['post_list'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['post_list'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['post_list'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['post_list'])]
     private ?string $image = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['post_list'])]
     private ?string $slug = null;
 
     public function __construct()
